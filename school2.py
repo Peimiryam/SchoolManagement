@@ -1,8 +1,10 @@
-type_user = ["student", "teacher", "homeroomteacher", "end"]
+type_user = ["student", "teacher", "homeroom teacher", "end"]
 
 commands = ['create', 'manage', 'end']
 
 database = {}
+
+database_student = {}
 
 students = []
 teachers = []
@@ -30,36 +32,40 @@ def main(command):
         break
 
 #user creation
-def create(type_user):
-    type_user = input("Select the type of user: 'student' 'teacher' 'homeroom teacher'\n or input 'end' to return to the main menu: ")
+def create(type_users):
+    type_users = input("Select the type of user: 'student' 'teacher' 'homeroom teacher'\n or input 'end' to return to the main menu: ")
 
-    if type_user not in type_user:
-         print("Wrong input. ")
+    if type_users not in type_user:
+        print("Wrong input. ")
+        main(commands)
 
-    elif type_user == 'student':
+    elif type_users == 'student':
             print("Student creation in progress: ")
             student_creation()
         
-    elif type_user == 'teacher':
+    elif type_users == 'teacher':
             print("teacher creation in progress")
             teacher_creation()
 
-    elif type_user == 'homeroom teacher':
+    elif type_users == 'homeroom teacher':
             print("homeroom teacher creation in progress")
             homeroom_creation()
         
-    elif type_user == "end":
+    elif type_users == "end":
         main(commands)
 
 #student creation
 def student_creation():
-
     name = input("Insert a name and surname: ")
     classes = input("Insert a class: ")
     students.append(name)
     students.append(classes)
     database[name]=[f"Name/Surname: {name} , Class: {classes}"]
+    database_student[classes] = {name}  
+    print(database_student)
+    print(database)
     print(students)
+    
     main(commands)
         
 #teacher creation
@@ -85,10 +91,11 @@ def homeroom_creation():
 
 #search and get values
 def manage_members():
-    manage = input("Select the field to edit: student, teacher, homeroomteacher: ")
+    manage = input("Select the field to show: student, teacher, homeroom teacher: ")
 
     if manage not in type_user:
          print("Wrong input")
+         main(commands)
 
     elif manage == "student":
         search = input("Insert the name and surname you want to search: ")
@@ -102,14 +109,7 @@ def manage_members():
         search = input("Insert the name you want to search: ")
         if search in database:
             print(database[search])
-        else:
-             print("Not available")
-        main(commands)
-
-    elif manage == "homeroomteacher":
-        search = input("Insert the name you want to search: ")
-        if search in database:
-            print(database[search])
+            
         else:
              print("Not available")
         main(commands)
@@ -117,7 +117,22 @@ def manage_members():
     elif manage == 'end':
          main(commands)
 
+    elif manage == "homeroom teacher":
+        search = input("Insert the name you want to search: ")
+        if search in database:
+            print(database[search])
 
+            val = input("Insert a class to see all the students: ")
+            if val in database_student:
+                print(database_student[val])
+                   
+        elif search not in database:
+            print("Not available")
+            main(commands)
+
+
+
+    
 #main menu
 print("Hello! Welcome to the School Management Software.\n ")
 main(commands)
